@@ -177,11 +177,18 @@ const drawWaterfall = (data) => {
           console.log("tooltip", toolTip)
           console.log("d within html", d)
           console.log("this within html", this)
-          return (`<strong>Hi there<br>${d.name}<strong><hr>`);
+          return (`<strong>Hi there<br>${d.name}<strong><br><img src="logo.png" width = 20 height = 20>`);
         })
         .style("top", "800px")
-        .offset([100, -60])
-        toolTip.show(d)
+        .offset(function(d){
+          console.log(y(d.value))
+          console.log("test", Math.abs(y(d.start) - y(d.end)))
+          yShift = Math.abs(y(d.start) - y(d.end))
+          //values below are y, x
+          return([yShift + 50, 20])
+        });
+        console.log("showing d", d);
+        toolTip.show(d);
       d3.select(this)
         .style("stroke", "black")
         .style("opacity", 1)

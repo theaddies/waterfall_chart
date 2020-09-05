@@ -35,7 +35,7 @@ body {
   shape-rendering: crispEdges;
 }
 
-chart.tooltip {
+/* chart.tooltip {
   position: absolute;
   text-align: center;
   width: 60px;
@@ -46,7 +46,7 @@ chart.tooltip {
   border: 0px;
   border-radius: 8px;
   pointer-events: none;
-}
+} */
 
 .bubble {
   font-weight: bold;
@@ -58,9 +58,9 @@ chart.tooltip {
   stroke-width:2;
 }
 
-.tooltip {
+/* .tooltip {
   position: absolute;
-  width: 90px;
+  width: 100px;
   height: 70px;
   padding: 10px;
   font: 12px sans-serif;
@@ -69,5 +69,5 @@ chart.tooltip {
   background: blue;
   border: 0;
   border-radius: 10px;
-}
+} */
 
