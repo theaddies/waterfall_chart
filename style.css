@@ -35,7 +35,7 @@ body {
   shape-rendering: crispEdges;
 }
 
-div.tooltip {
+chart.tooltip {
   position: absolute;
   text-align: center;
   width: 60px;

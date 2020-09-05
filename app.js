@@ -177,10 +177,10 @@ const drawWaterfall = (data) => {
           console.log("tooltip", toolTip)
           console.log("d within html", d)
           console.log("this within html", this)
-          return (`<strong>Hi there<br>${d.name}<strong><hr>fd
-          medal(s) won`);
+          return (`<strong>Hi there<br>${d.name}<strong><hr>`);
         })
         .style("top", "800px")
+        .offset([100, -60])
         toolTip.show(d)
       d3.select(this)
         .style("stroke", "black")
