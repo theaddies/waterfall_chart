@@ -137,6 +137,8 @@ const drawWaterfall = (data) => {
     .attr('class', 'connector')
     .attr('x1', x.bandwidth() + 5)
     .attr('y1', (d) => {
+      console.log("y only start of line", y)
+      console.log("y start of line", y(d.start))
       return d.class === 'total' ? y(d.start) : y(d.end);
     })
     .attr('x2', (x.bandwidth() / (1 - padding)) - 5)
@@ -147,16 +149,19 @@ const drawWaterfall = (data) => {
       var toolTip = d3.tip()
         .attr("class", "tooltip")
         .style("color", "red")
-        .style("position", "absolute")
-        .style("top", "300px")
-        .offset([function(d){
-          console.log("within tooltip",d)
-          return d}, 0])
+        //.style("position", "absolute")
+        // .style(function(d) {
+        //   console.log("********************************************************")
+        //   var yValue = y(d.end);
+        //   console.log("yValue***************************", yValue);
+        //   return (`top, ${yValue}px`);
+        // })
         .html(function(d) {
           console.log("at html")
           console.log("tooltip", toolTip)
-          console.log("this", this)
-          return (`<strong>dsfzsdf<strong><hr>fd
+          console.log("d within html", d)
+          console.log("this within html", this)
+          return (`<strong>Hi there<br>${d.name}<strong><hr>fd
           medal(s) won`);
         })
 
@@ -171,7 +176,7 @@ const drawWaterfall = (data) => {
         console.log("this.rect[0].y", this.getElementsByTagName("rect")[0].y.animVal.value)
         var yDim = this.getElementsByTagName("rect")[0].y.animVal.value
         console.log("this.rect[0].outerHTML", this.getElementsByTagName("rect")[0].childNodes)
-        toolTip.show(d, this);
+        toolTip.show(d);
       })
       // Step 4: Create "mouseout" event listener to hide tooltip
         .on("mouseout", function(d) {
