@@ -148,22 +148,16 @@ const drawWaterfall = (data) => {
       // Step 1: Initialize Tooltip
       var toolTip = d3.tip()
         .attr("class", "tooltip")
-        .style("color", "red")
+        //.style("top", d3.select(this).attr("y") + "px")
+        //.style("top", "400px")
         //.style("position", "absolute")
         // .style(function(d) {
         //   console.log("********************************************************")
         //   var yValue = y(d.end);
         //   console.log("yValue***************************", yValue);
-        //   return (`top, ${yValue}px`);
+        //   return ("top", yValue + "px");
         // })
-        .html(function(d) {
-          console.log("at html")
-          console.log("tooltip", toolTip)
-          console.log("d within html", d)
-          console.log("this within html", this)
-          return (`<strong>Hi there<br>${d.name}<strong><hr>fd
-          medal(s) won`);
-        })
+
 
       // Step 2: Create the tooltip in chartGroup.
       chart.call(toolTip);
@@ -176,11 +170,28 @@ const drawWaterfall = (data) => {
         console.log("this.rect[0].y", this.getElementsByTagName("rect")[0].y.animVal.value)
         var yDim = this.getElementsByTagName("rect")[0].y.animVal.value
         console.log("this.rect[0].outerHTML", this.getElementsByTagName("rect")[0].childNodes)
-        toolTip.show(d);
+        toolTip
+        .style("opacity", 1)
+        .html(function(d) {
+          console.log("at html")
+          console.log("tooltip", toolTip)
+          console.log("d within html", d)
+          console.log("this within html", this)
+          return (`<strong>Hi there<br>${d.name}<strong><hr>fd
+          medal(s) won`);
+        })
+        .style("top", "800px")
+        toolTip.show(d)
+      d3.select(this)
+        .style("stroke", "black")
+        .style("opacity", 1)
       })
       // Step 4: Create "mouseout" event listener to hide tooltip
         .on("mouseout", function(d) {
           toolTip.hide(d);
+          d3.select(this)
+          .style("stroke", "white")
+          .style("opacity", 1)
         });
 }; // drawWaterfall
 
