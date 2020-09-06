@@ -1,7 +1,8 @@
-const margin = { top: 80, right: 30, bottom: 100, left: 150 };
+const margin = { top: 100, right: 30, bottom: 100, left: 150 };
 const width = 1200 - margin.left - margin.right;
 const height = 800 - margin.top - margin.bottom;
 const padding = 0.3;
+var ellipseOffset = 25;
 var minYvalue = 100000000;
 
 const x = d3
@@ -29,6 +30,25 @@ const chart = d3
   .attr('height', height + margin.top + margin.bottom)
   .append('g')
   .attr('transform', `translate(${ margin.left },${ margin.top })`);
+
+  chart.append("text")
+        .attr("x", (width / 2))             
+        .attr("y", 0 - (margin.top) + 30)
+        .style("font-size", "x-large")
+        .attr("text-anchor", "middle")  
+       // .style("font-size", "16px") 
+        .style("text-decoration", "underline")  
+        .text("Value vs Date Graph");
+
+  chart.append("text")
+    .attr("class", "y label")
+    .attr("text-anchor", "end")
+    .style("font-size", "x-large")
+    .attr("y", -70)
+    .attr("x", -height / 2 +30)
+    .attr("dy", ".75em")
+    .attr("transform", "rotate(-90)")
+    .text("Sales (Millions €)");
 
 const type = (d) => {
   d.value = +d.value;
@@ -128,7 +148,7 @@ var rect = bar.append('g')
     .attr('class', 'bubble')
     .attr('class', 'ellipse')
     .attr('cx', x.bandwidth() / 2)
-    .attr('cy', (0 - margin.top) / 2)
+    .attr('cy', (ellipseOffset - margin.top) / 2)
     .attr('rx', 30)
     .attr('ry', '1em');
 
@@ -139,7 +159,7 @@ var rect = bar.append('g')
     })
     .append('text')
     .attr('x', x.bandwidth() / 2)
-    .attr('y', (0 - margin.top) / 2)
+    .attr('y', (ellipseOffset - margin.top) / 2)
     .attr('dy', '.3em')
     .attr('class', 'bubble')
     .text((d) => {
