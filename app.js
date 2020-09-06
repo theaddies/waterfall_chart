@@ -77,7 +77,9 @@ const drawWaterfall = (data) => {
       return `translate(${ x(d.name) },0)`;
     });
 
-  var rect = bar
+var rect = bar.append('g')
+
+  rect
     .append('rect')
     .attr('y', (d) => {
       return y(Math.max(d.start, d.end));
@@ -94,7 +96,7 @@ const drawWaterfall = (data) => {
     })
 
   // Add the value on each bar
-  bar
+  rect
     .append('text')
     .attr('x', x.bandwidth() / 2)
     .attr('y', (d) => {
