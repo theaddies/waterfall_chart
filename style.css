@@ -16,8 +16,8 @@ body {
 }
 
 .bar line.connector {
-  stroke: grey;
-  stroke-dasharray: 3;
+  stroke: rgb(147, 111, 214);
+  stroke-width: 4;
 }
 
 .bar text {
@@ -58,16 +58,16 @@ body {
   stroke-width:2;
 }
 
-/* .tooltip {
+.tooltip {
   position: absolute;
   width: 100px;
   height: 70px;
   padding: 10px;
-  font: 12px sans-serif;
+  font: 10px sans-serif;
   text-align: center;
-  color: rgb(129, 69, 69);
-  background: blue;
+  color: black;
+  /* background: grey; */
   border: 0;
   border-radius: 10px;
-} */
+}
 

@@ -170,34 +170,44 @@ const drawWaterfall = (data) => {
         console.log("this.rect[0].y", this.getElementsByTagName("rect")[0].y.animVal.value)
         var yDim = this.getElementsByTagName("rect")[0].y.animVal.value
         console.log("this.rect[0].outerHTML", this.getElementsByTagName("rect")[0].childNodes)
-        toolTip
-        .style("opacity", 1)
+        console.log("d.class !==", (d.class !== "total"))
+        if (d.class !== "total") {
+          toolTip
+ //       .style("opacity", 1)
+//        .style("background", "green")
+        .style("background" , function(d){
+          console.log("printing d here ****************", d)
+          return("green")
+        })
         .html(function(d) {
           console.log("at html")
           console.log("tooltip", toolTip)
           console.log("d within html", d)
           console.log("this within html", this)
-          return (`<strong>Hi there<br>${d.name}<strong><br><img src="logo.png" width = 20 height = 20>`);
+          return (`<strong>Hi there<br>${d.name}</strong><br>${eurFormat(d.value)}<br><img src=${d.file} width = 30 height = 30>`);
         })
-        .style("top", "800px")
+
         .offset(function(d){
           console.log(y(d.value))
           console.log("test", Math.abs(y(d.start) - y(d.end)))
           yShift = Math.abs(y(d.start) - y(d.end))
           //values below are y, x
-          return([yShift + 50, 20])
+          return([yShift + 80, 20])
         });
         console.log("showing d", d);
-        toolTip.show(d);
+        toolTip.show(d)
       d3.select(this)
-        .style("stroke", "black")
+        //.style("stroke", "black")
         .style("opacity", 1)
+
+      }
       })
+    
       // Step 4: Create "mouseout" event listener to hide tooltip
         .on("mouseout", function(d) {
           toolTip.hide(d);
           d3.select(this)
-          .style("stroke", "white")
+          //.style("stroke", "black")
           .style("opacity", 1)
         });
 }; // drawWaterfall
