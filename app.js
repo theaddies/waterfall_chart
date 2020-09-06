@@ -77,7 +77,7 @@ const drawWaterfall = (data) => {
       return `translate(${ x(d.name) },0)`;
     });
 
-  bar
+  var rect = bar
     .append('rect')
     .attr('y', (d) => {
       return y(Math.max(d.start, d.end));
@@ -159,16 +159,16 @@ const drawWaterfall = (data) => {
         // })
 
       // Step 2: Create the tooltip in chartGroup.
-      chart.call(toolTip);
+      rect.call(toolTip);
 
       // Step 3: Create "mouseover" event listener to display tooltip
-      bar.on("mouseover", function(d) {
+      rect.on("mouseover", function(d) {
+        // toolTip.transition()		
+        // .duration(800)
+        toolTip
+        .style("opacity", .9);	
         console.log("d here", d)
         console.log("this", this)
-        console.log("this.rect[0]", this.getElementsByTagName("rect")[0])
-        console.log("this.rect[0].y", this.getElementsByTagName("rect")[0].y.animVal.value)
-        var yDim = this.getElementsByTagName("rect")[0].y.animVal.value
-        console.log("this.rect[0].outerHTML", this.getElementsByTagName("rect")[0].childNodes)
         console.log("d.class !==", (d.class !== "total"))
         if (d.class !== "total") {
           console.log("just after the if statement************************************************", d)
@@ -200,6 +200,7 @@ const drawWaterfall = (data) => {
         console.log("showing d", d);
         toolTip.show(d)
       d3.select(this)
+      .classed("makebold", true)
         //.style("stroke", "black")
         .style("opacity", 1)
       }
@@ -209,7 +210,7 @@ const drawWaterfall = (data) => {
         .on("mouseout", function(d) {
           toolTip.hide(d);
           d3.select(this)
-          //.style("stroke", "black")
+          .classed("makebold", false)
           .style("opacity", 1)
         });
 }; // drawWaterfall
