@@ -1,4 +1,4 @@
-const margin = { top: 80, right: 30, bottom: 30, left: 100 };
+const margin = { top: 80, right: 30, bottom: 100, left: 150 };
 const width = 1200 - margin.left - margin.right;
 const height = 800 - margin.top - margin.bottom;
 const padding = 0.3;
@@ -18,6 +18,8 @@ const xAxis = d3.axisBottom(x);
 const yAxis = d3
   .axisLeft(y)
   .tickFormat((d) => {
+    console.log("show tick format vlaue", d)
+    d = Math.round(d/1000000)
     return d;
   });
 
@@ -32,6 +34,10 @@ const type = (d) => {
   d.value = +d.value;
   return d;
 }; // type
+
+function removeMillion(amount){
+  return(`${Math.round(amount / 1000000)}`)
+}
 
 const eurFormat = (amount) => {
   if (Math.abs(amount) > 1000000) {
@@ -52,7 +58,7 @@ const drawWaterfall = (data) => {
   y.domain([
     100000000,
     d3.max(data, (d) => {
-      return d.end;
+      return Math.round(d.end);
     })
   ]);
     console.log("y-domain", y.domain)
@@ -60,12 +66,17 @@ const drawWaterfall = (data) => {
     .append('g')
     .attr('class', 'x axis')
     .attr('transform', `translate(0,${ height })`)
-    .call(xAxis);
+    .call(xAxis)
+    .selectAll('text')
+    .attr("transform", "rotate(-45)")
+    .style("text-anchor", "end");;
 
   chart
     .append('g')
     .attr('class', 'y axis')
-    .call(yAxis);
+    .call(yAxis)
+    .selectAll('text')
+    .classed('makebold', true);
 
   const bar = chart.selectAll('.bar')
     .data(data)
@@ -102,7 +113,7 @@ var rect = bar.append('g')
     .attr('y', (d) => {
       return d.class === 'positive' ? y(d.end) : y(d.start);
     })
-    .attr('dy', '-.5em')
+    .attr('dy', '-.2em')
     .text((d) => {
       return d.class === 'total' ? eurFormat(d.start - d.end + minYvalue) : eurFormat(d.end - d.start);
     })
