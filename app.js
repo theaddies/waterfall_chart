@@ -158,7 +158,6 @@ const drawWaterfall = (data) => {
         //   return ("top", yValue + "px");
         // })
 
-
       // Step 2: Create the tooltip in chartGroup.
       chart.call(toolTip);
 
@@ -172,13 +171,17 @@ const drawWaterfall = (data) => {
         console.log("this.rect[0].outerHTML", this.getElementsByTagName("rect")[0].childNodes)
         console.log("d.class !==", (d.class !== "total"))
         if (d.class !== "total") {
+          console.log("just after the if statement************************************************", d)
+          if(d.value > 0){
+            bColor = "lime"
+          }
+          else {
+            bColor = "tomato"
+          }
           toolTip
  //       .style("opacity", 1)
 //        .style("background", "green")
-        .style("background" , function(d){
-          console.log("printing d here ****************", d)
-          return("green")
-        })
+        .style("background" , bColor)
         .html(function(d) {
           console.log("at html")
           console.log("tooltip", toolTip)
@@ -192,14 +195,13 @@ const drawWaterfall = (data) => {
           console.log("test", Math.abs(y(d.start) - y(d.end)))
           yShift = Math.abs(y(d.start) - y(d.end))
           //values below are y, x
-          return([yShift + 80, 20])
+          return([yShift + 90, 0])
         });
         console.log("showing d", d);
         toolTip.show(d)
       d3.select(this)
         //.style("stroke", "black")
         .style("opacity", 1)
-
       }
       })
     
