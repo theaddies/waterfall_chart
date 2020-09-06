@@ -87,6 +87,12 @@ const drawWaterfall = (data) => {
     })
     .attr('width', x.bandwidth());
 
+    var filterRect = rect
+    .filter((d, i) => {
+      // filter out first bar and total bars
+      return (d.class !== 'total' && i !== 0);
+    })
+
   // Add the value on each bar
   bar
     .append('text')
@@ -159,10 +165,11 @@ const drawWaterfall = (data) => {
         // })
 
       // Step 2: Create the tooltip in chartGroup.
-      rect.call(toolTip);
+      filterRect.call(toolTip);
 
       // Step 3: Create "mouseover" event listener to display tooltip
-      rect.on("mouseover", function(d) {
+
+      filterRect.on("mouseover", function(d) {
         // toolTip.transition()		
         // .duration(800)
         toolTip
