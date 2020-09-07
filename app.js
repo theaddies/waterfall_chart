@@ -264,11 +264,10 @@ function tooltipColor(d) {
 
 
         // Step 4: Create "mouseout" event listener to hide tooltip
-        .on("mouseout", function (d) {
-          toolTip.hide;
-          d3.select(this)
-            .classed("makebold", false)
-        });
+        .on("mouseout", toolTip.hide)
+        //   d3.select(this)
+        //     .classed("makebold", false)
+        // });
     }; // drawWaterfall
 
     const prepData = (data) => {
