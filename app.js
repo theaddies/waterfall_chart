@@ -158,21 +158,20 @@ const drawWaterfall = (data) => {
     .attr('y', (d) => {
       return y(Math.max(d.start, d.end));
     })
-    .attr('height', (d) => {
-      return Math.abs(y(d.start) - y(d.end));
-    })
+    .attr('height', 0)
     .attr('width', x.bandwidth())
 
   // Animation
   //note here that CharGroup works.  Using bar does not.
   //it also seems that selectAll('rect') is the right thing to choose
-  console.log("chartgroup rect", chartGroup.selectAll('rect'))
-  chartGroup.selectAll('rect')
+  // console.log("chartgroup rect", chartGroup.selectAll('rect'))
+  // chartGroup.selectAll('rect')
     .transition()
-    .duration(2000)
+    .delay(500)
+    .duration(4000)
     .attr("y", function (d) { console.log("d in delay", d); return y(Math.max(d.start, d.end)); })
     .attr("height", function (d) { return Math.abs(y(d.start) - y(d.end)); })
-    .delay(function (d, i) { console.log("i here", i); return (10 * 100) })
+    .delay(function (d, i) { console.log("i here", i); return (i * 100) })
 
   // Add the value on each bar
   bar
@@ -294,8 +293,9 @@ const drawWaterfall = (data) => {
       //if make selection of color depending on whether bar is positive or negative.
       if (selectedClass == 'bar positive transition') {
         d3.select(this)
-          .classed('bar transition positive', false)
-          .classed('bar positive', true)
+        .classed('bar transition positive', false)
+        .classed('bar positive', true)
+
       }
       else if (selectedClass == 'bar negative transition') {
         d3.select(this)
