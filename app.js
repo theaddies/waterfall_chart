@@ -221,9 +221,16 @@ const drawWaterfall = (data) => {
 
   var toolTip = d3.tip()
     .attr('class', 'tooltip')
-    .offset([80, -60])
+    //.offset([80, -60])
     .html(function (d) {
       return (`<strong>Hi there<br>${d.name}</strong><br>${eurFormat(d.value)}<br><img src=${d.file} width = 30 height = 30>`)
+    })
+    .offset(function(d){
+      console.log(y(d.value))
+      console.log("test", Math.abs(y(d.start) - y(d.end)))
+      yShift = Math.abs(y(d.start) - y(d.end))
+      //values below are y, x
+      return([yShift + 90, 0])
     })
 
   // Step 2: Create the tooltip in chartGroup.
