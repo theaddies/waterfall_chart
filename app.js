@@ -1,76 +1,96 @@
-const margin = { top: 100, right: 30, bottom: 100, left: 150 };
-const width = 1200 - margin.left - margin.right;
-const height = 800 - margin.top - margin.bottom;
-const padding = 0.3;
+var svgWidth = 1800
+var svgHeight = 1200
+
+var margin = {
+  top: 100,
+  right: 40,
+  bottom: 100,
+  left: 100
+};
+
+var width = svgWidth - margin.left - margin.right;
+var height = svgHeight - margin.top - margin.bottom;
+
+// this is the space between the bars
+const padding = 0.4;
+//the ellipse offset is the spacing down of the ellipses
 var ellipseOffset = 25;
+//this is the minimum value that will display on the y-axis
 var minYvalue = 100000000;
 
-const x = d3
-  .scaleBand()
-  .rangeRound([ 0, width ])
-  .padding(padding);
+// Append SVG element
+var svg = d3
+  .select(".chart")
+  .append("svg")
+  .attr("height", svgHeight)
+  .attr("width", svgWidth);
 
-const y = d3
-  .scaleLinear()
-  .range([ height, 0 ]);
+// Append group element
+var chartGroup = svg.append("g")
+  .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-const xAxis = d3.axisBottom(x);
+chartGroup.append("text")
+  .attr("x", (width / 2))
+  .attr("y", 0 - (margin.top) + 30)
+  .style("font-size", "x-large")
+  .attr("text-anchor", "middle")
+  // .style("font-size", "16px") 
+  .style("text-decoration", "underline")
+  .text("Value vs Date Graph");
 
-const yAxis = d3
-  .axisLeft(y)
-  .tickFormat((d) => {
-    console.log("show tick format vlaue", d)
-    d = Math.round(d/1000000)
-    return d;
-  });
-
-const chart = d3
-  .select('.chart')
-  .attr('width', width + margin.left + margin.right)
-  .attr('height', height + margin.top + margin.bottom)
-  .append('g')
-  .attr('transform', `translate(${ margin.left },${ margin.top })`);
-
-  chart.append("text")
-        .attr("x", (width / 2))             
-        .attr("y", 0 - (margin.top) + 30)
-        .style("font-size", "x-large")
-        .attr("text-anchor", "middle")  
-       // .style("font-size", "16px") 
-        .style("text-decoration", "underline")  
-        .text("Value vs Date Graph");
-
-  chart.append("text")
-    .attr("class", "y label")
-    .attr("text-anchor", "end")
-    .style("font-size", "x-large")
-    .attr("y", -70)
-    .attr("x", -height / 2 +30)
-    .attr("dy", ".75em")
-    .attr("transform", "rotate(-90)")
-    .text("Sales (Millions €)");
+chartGroup.append("text")
+  .attr("class", "y label")
+  .attr("text-anchor", "end")
+  .style("font-size", "x-large")
+  .attr("y", -70)
+  .attr("x", -height / 2 + 30)
+  .attr("dy", ".75em")
+  .attr("transform", "rotate(-90)")
+  .text("Sales (Millions €)");
 
 const type = (d) => {
   d.value = +d.value;
   return d;
 }; // type
 
-function removeMillion(amount){
-  return(`${Math.round(amount / 1000000)}`)
+function removeMillion(amount) {
+  return (`${Math.round(amount / 1000000)}`)
 }
 
 const eurFormat = (amount) => {
   if (Math.abs(amount) > 1000000) {
-    return `${ Math.round(amount / 1000000) }M€`;
+    return `${Math.round(amount / 1000000)}M€`;
   }
   if (Math.abs(amount) > 1000) {
-    return `${ Math.round(amount / 1000) }K€`;
+    return `${Math.round(amount / 1000)}K€`;
   }
-  return `${ amount }€`;
+  return `${amount}€`;
 }; // eurFormat
 
 const drawWaterfall = (data) => {
-    console.log("waterfall_data", data)
+  console.log("waterfall_data", data)
+
+
+  const x = d3
+    .scaleBand()
+    .rangeRound([0, width])
+    .padding(padding);
+
+  const y = d3
+    .scaleLinear()
+    .range([height, 0]);
+
+  const xAxis = d3.axisBottom(x);
+
+  const yAxis = d3
+    .axisLeft(y)
+    .tickFormat((d) => {
+      console.log("show tick format vlaue", d)
+      d = Math.round(d / 1000000)
+      return d;
+    });
+
+
   x.domain(data.map((d) => {
     return d.name;
   }));
@@ -81,37 +101,42 @@ const drawWaterfall = (data) => {
       return Math.round(d.end);
     })
   ]);
-    console.log("y-domain", y.domain)
-  chart
+  console.log("y-domain", y.domain)
+
+  //add the x-axis
+  chartGroup
     .append('g')
     .attr('class', 'x axis')
-    .attr('transform', `translate(0,${ height })`)
+    .attr('transform', `translate(0,${height})`)
     .call(xAxis)
     .selectAll('text')
     .classed("makebold", true)
     .attr("transform", "rotate(-45)")
     .style("text-anchor", "end");;
 
-  chart
+
+  //add the y-axis
+  chartGroup
     .append('g')
     .attr('class', 'y axis')
     .call(yAxis)
     .selectAll('text')
     .classed('makebold', true);
 
-  const bar = chart.selectAll('.bar')
+  //add a g with the bars with class so you can separate the bars total, positive, negative
+  var bar = chartGroup.selectAll('.bar')
     .data(data)
     .enter().append('g')
     .attr('class', (d) => {
-      return `bar ${ d.class }`;
+      return `bar ${d.class}`;
     })
     .attr('transform', (d) => {
-      return `translate(${ x(d.name) },0)`;
-    });
+      return `translate(${x(d.name)},0)`;
+    })
 
-var rect = bar.append('g')
-
-  rect
+  //var rect = bar.append('g')
+  //here within each g added to bar we append a rect and set the values
+  bar
     .append('rect')
     .attr('y', (d) => {
       return y(Math.max(d.start, d.end));
@@ -119,16 +144,20 @@ var rect = bar.append('g')
     .attr('height', (d) => {
       return Math.abs(y(d.start) - y(d.end));
     })
-    .attr('width', x.bandwidth());
+    .attr('width', x.bandwidth())
 
-    var filterRect = rect
-    .filter((d, i) => {
-      // filter out first bar and total bars
-      return (d.class !== 'total' && i !== 0);
-    })
+  // Animation
+  //note here that CharGroup works.  Using bar does not.
+  //it also seems that selectAll('rect') is the right thing to choose
+  chartGroup.selectAll('rect')
+    .transition()
+    .duration(2000)
+    .attr("y", function (d) { console.log("d in delay", d); return y(Math.max(d.start, d.end)); })
+    .attr("height", function (d) { return Math.abs(y(d.start) - y(d.end)); })
+    .delay(function (d, i) { console.log("i here", i); return (10 * 100) })
 
   // Add the value on each bar
-  rect
+  bar
     .append('text')
     .attr('x', x.bandwidth() / 2)
     .attr('y', (d) => {
@@ -140,11 +169,16 @@ var rect = bar.append('g')
     })
     .style('fill', 'black');
 
-  bar
+  //filter out the first bar and the total classed bars.  they don't get ellipses.
+
+  var filterBar = bar
     .filter((d, i) => {
       // filter out first bar and total bars
       return (d.class !== 'total' && i !== 0);
     })
+
+  //add the ellipses
+  filterBar
     .append('ellipse')
     .attr('class', 'bubble')
     .attr('class', 'ellipse')
@@ -153,11 +187,8 @@ var rect = bar.append('g')
     .attr('rx', 30)
     .attr('ry', '1em');
 
-  bar
-    .filter((d, i) => {
-      // filter out first bar and total bars
-      return (d.class !== 'total' && i !== 0);
-    })
+  //add the values within the ellipses
+  filterBar
     .append('text')
     .attr('x', x.bandwidth() / 2)
     .attr('y', (ellipseOffset - margin.top) / 2)
@@ -165,7 +196,7 @@ var rect = bar.append('g')
     .attr('class', 'bubble')
     .text((d) => {
       const percentage = d3.format('.1f')(((100 * (d.end - d.start)) / d.start));
-      return `${ percentage }%`;
+      return `${percentage}%`;
     });
 
   // Add the connecting line between each bar
@@ -185,83 +216,39 @@ var rect = bar.append('g')
     .attr('y2', (d) => {
       return d.class === 'total' ? y(d.start) : y(d.end);
     });
-      // Step 1: Initialize Tooltip
-      var toolTip = d3.tip()
-        .attr("class", "tooltip")
-        //.style("top", d3.select(this).attr("y") + "px")
-        //.style("top", "400px")
-        //.style("position", "absolute")
-        // .style(function(d) {
-        //   console.log("********************************************************")
-        //   var yValue = y(d.end);
-        //   console.log("yValue***************************", yValue);
-        //   return ("top", yValue + "px");
-        // })
 
-      // Step 2: Create the tooltip in chartGroup.
-      filterRect.call(toolTip);
+  // Step 1: Initialize Tooltip
 
-      // Step 3: Create "mouseover" event listener to display tooltip
+  var toolTip = d3.tip()
+    .attr('class', 'tooltip')
+    .offset([80, -60])
+    .html(function (d) {
+      return (`<strong>Hi there<br>${d.name}</strong><br>${eurFormat(d.value)}<br><img src=${d.file} width = 30 height = 30>`)
+    })
 
-      filterRect.on("mouseover", function(d) {
-        // toolTip.transition()		
-        // .duration(800)
-        toolTip
-        .style("opacity", .9);	
-        console.log("d here", d)
-        console.log("this", this)
-        console.log("d.class !==", (d.class !== "total"))
-        if (d.class !== "total") {
-          console.log("just after the if statement************************************************", d)
-          if(d.value > 0){
-            bColor = "lime"
-          }
-          else {
-            bColor = "tomato"
-          }
-          toolTip
- //       .style("opacity", 1)
-//        .style("background", "green")
-        .style("background" , bColor)
-        .html(function(d) {
-          console.log("at html")
-          console.log("tooltip", toolTip)
-          console.log("d within html", d)
-          console.log("this within html", this)
-          return (`<strong>Hi there<br>${d.name}</strong><br>${eurFormat(d.value)}<br><img src=${d.file} width = 30 height = 30>`);
-        })
+  // Step 2: Create the tooltip in chartGroup.
+  // REQUIRED:  Call the tooltip on the context of the visualization
+  filterBar.call(toolTip);
 
-        .offset(function(d){
-          console.log(y(d.value))
-          console.log("test", Math.abs(y(d.start) - y(d.end)))
-          yShift = Math.abs(y(d.start) - y(d.end))
-          //values below are y, x
-          return([yShift + 90, 0])
-        });
-        console.log("showing d", d);
-        toolTip.show(d)
+  // Step 3: Create "mouseover" event listener to display tooltip
+  // Show and hide the tooltip
+
+  filterBar
+    .on("mouseover", toolTip.show)
+
+
+    // Step 4: Create "mouseout" event listener to hide tooltip
+    .on("mouseout", function (d) {
+      toolTip.hide;
       d3.select(this)
-      .classed("makebold", true)
-        //.style("stroke", "black")
-        .style("opacity", 1)
-      }
-      })
-    
-      // Step 4: Create "mouseout" event listener to hide tooltip
-        .on("mouseout", function(d) {
-          toolTip.hide(d);
-          d3.select(this)
-          .classed("makebold", false)
-          .style("opacity", 1)
-        });
+        .classed("makebold", false)
+    });
 }; // drawWaterfall
 
 const prepData = (data) => {
   // create stacked remainder
-  console.log("data =",data)
   const insertStackedRemainderAfter = (dataName, newDataName) => {
     const index = data.findIndex((datum) => {
-        console.log("datum name",datum.name)
       return datum.name === dataName;
     }); // data.findIndex
     console.log("index", index)
@@ -279,27 +266,26 @@ const prepData = (data) => {
 
   // Transform data (i.e., finding cumulative values and total) for easier charting
   data.map((datum) => {
-      console.log("datun",datum)
+    console.log("datun", datum)
     datum.start = cumulative;
     cumulative += datum.value;
     //this reverses the order for the first bar so that it can also be a total.
-    if(datum.start == 0) {
-        datum.class = "total";
-        datum.start = cumulative
-        datum.end = minYvalue;
-      }
-    else if(datum.value >= 0){
-        datum.class = "positive"
-        datum.end = cumulative;
+    if (datum.start == 0) {
+      datum.class = "total";
+      datum.start = cumulative
+      datum.end = minYvalue;
+    }
+    else if (datum.value >= 0) {
+      datum.class = "positive"
+      datum.end = cumulative;
     }
     else {
-        datum.class = "negative"
-        datum.end = cumulative;
+      datum.class = "negative"
+      datum.end = cumulative;
     }
-
-//    return datum.class = datum.value >= 0 ? 'positive' : 'negative';
+    //    return datum.class = datum.value >= 0 ? 'positive' : 'negative';
     return datum.class;
-}); // data.map
+  }); // data.map
 
   // insert stacked remainders where approriate
   insertStackedRemainderAfter('customer6_2020', '2020Int');
