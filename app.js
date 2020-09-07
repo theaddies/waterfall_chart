@@ -88,6 +88,7 @@ const drawWaterfall = (data) => {
     .attr('transform', `translate(0,${ height })`)
     .call(xAxis)
     .selectAll('text')
+    .classed("makebold", true)
     .attr("transform", "rotate(-45)")
     .style("text-anchor", "end");;
 
