@@ -11,9 +11,20 @@ body {
 .bar.positive rect {
   fill: darkolivegreen;
 }
+
 .bar.negative rect {
   fill: crimson;
 }
+
+
+.bar.transition.positive rect{
+  fill: limegreen;
+}
+
+.bar.transition.negative rect{
+  fill: tomato;
+}
+
 
 .bar line.connector {
   stroke: rgb(147, 111, 214);

@@ -166,6 +166,7 @@ const drawWaterfall = (data) => {
   // Animation
   //note here that CharGroup works.  Using bar does not.
   //it also seems that selectAll('rect') is the right thing to choose
+  console.log("chartgroup rect", chartGroup.selectAll('rect'))
   chartGroup.selectAll('rect')
     .transition()
     .duration(2000)
@@ -256,18 +257,29 @@ const drawWaterfall = (data) => {
 
   // Step 3: Create "mouseover" event listener to display tooltip
   // Show and hide the tooltip
-
-  // filterBar
-  //   .on("mouseover", toolTip.show)
-
   filterBar
     .on("mouseover", function (data) {
       toolTip.show(data);
-      console.log("tooltip show data", data)
-      console.log("show this", this)
+
+      //here all you have to do is reference the toolTip and change the style.  Duh.
       toolTip
-      .style('background', tooltipColor(data))
-      console.log("tool tip color", tooltipColor(data))
+        .style('background', tooltipColor(data));
+      // determine if the highlighted bar is positive or negative
+      var selectedClass = d3.select(this)
+        .attr("class");
+      console.log("selectedClass", selectedClass)
+
+      //if make selection of color depending on whether bar is positive or negative.
+      if (selectedClass == 'bar positive') {
+        d3.select(this)
+          .classed('bar transition positive', true)
+      }
+      else if (selectedClass == 'bar negative') {
+        d3.select(this)
+          .classed('bar transition negative', true)
+      }
+//change text above bar to bold and larger
+      console.log("selecting text", d3.select(this).select('text'))
       d3.select(this).select('text')
         .classed("makebold", true)
     })
@@ -275,8 +287,22 @@ const drawWaterfall = (data) => {
     // Step 4: Create "mouseout" event listener to hide tooltip
     .on("mouseout", function (data) {
       toolTip.hide(data);
-      console.log("tooltip show data", data)
-      console.log("show this", this)
+      // determine if the highlighted bar is positive or negative
+      var selectedClass = d3.select(this)
+        .attr("class");
+      console.log("selectedClass", selectedClass)
+      //if make selection of color depending on whether bar is positive or negative.
+      if (selectedClass == 'bar positive transition') {
+        d3.select(this)
+          .classed('bar transition positive', false)
+          .classed('bar positive', true)
+      }
+      else if (selectedClass == 'bar negative transition') {
+        d3.select(this)
+          .classed('bar transition negative', false)
+          .classed('bar negative', true)
+      }
+//change text above bar back to normal
       d3.select(this).select('text')
         .classed("makebold", false)
     })
